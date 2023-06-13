@@ -67,14 +67,76 @@ namespace PanoptoDownloader
                 RedirectStandardError = true
             };
 
+            // Disable form controls
+            SetFormControlsEnabled(false);
+
+            // Create a progress bar and show it
+            ProgressBar progressBar = new ProgressBar
+            {
+                Style = ProgressBarStyle.Marquee,
+                Dock = DockStyle.Fill
+            };
+            Form progressForm = new Form
+            {
+                Width = 300,
+                Height = 100,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = "Downloading...",
+                ControlBox = false,
+                StartPosition = FormStartPosition.CenterScreen,
+                ShowIcon = false,
+                ShowInTaskbar = false
+            };
+            progressForm.Controls.Add(progressBar);
+            progressForm.FormClosed += (s, args) =>
+            {
+                // Re-enable form controls when the progress form is closed
+                SetFormControlsEnabled(true);
+            };
+            progressForm.Show();
+
             // Start the process
             Process process = new Process { StartInfo = startInfo };
-            process.OutputDataReceived += Process_OutputDataReceived;
-            process.ErrorDataReceived += Process_ErrorDataReceived;
+            process.OutputDataReceived += (s, args) =>
+            {
+                // Handle the output data received from the process (if needed)
+                if (!string.IsNullOrEmpty(args.Data))
+                {
+                    // Do something with the output data
+                }
+            };
+            process.ErrorDataReceived += (s, args) =>
+            {
+                // Handle the error data received from the process (if needed)
+                if (!string.IsNullOrEmpty(args.Data))
+                {
+                    // Do something with the error data
+                }
+            };
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
+
+            // Monitor the existence of the .mp4 file
+            while (!File.Exists(outputName))
+            {
+                Application.DoEvents();
+                // You can add a small delay here if needed: Thread.Sleep(100);
+            }
+
+            // Close the progress form when the file is present
+            progressForm.Close();
+
             process.WaitForExit();
+        }
+
+        private void SetFormControlsEnabled(bool enabled)
+        {
+            // Set the enabled property of each control on the form
+            foreach (Control control in Controls)
+            {
+                control.Enabled = enabled;
+            }
         }
 
         private void btnHelp_Click(object sender, EventArgs e)
