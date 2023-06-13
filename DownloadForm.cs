@@ -41,9 +41,9 @@ namespace PanoptoDownloader
             }
         }
 
-        private void btnDownload_Click_1(object sender, EventArgs e)
+        private async void btnDownload_Click_1(object sender, EventArgs e)
         {
-                        string url = txtUrl.Text;
+            string url = txtUrl.Text;
             string outputName = txtOutputName.Text;
 
             if (!outputName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
@@ -70,30 +70,8 @@ namespace PanoptoDownloader
             // Disable form controls
             SetFormControlsEnabled(false);
 
-            // Create a progress bar and show it
-            ProgressBar progressBar = new ProgressBar
-            {
-                Style = ProgressBarStyle.Marquee,
-                Dock = DockStyle.Fill
-            };
-            Form progressForm = new Form
-            {
-                Width = 300,
-                Height = 100,
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                Text = "Downloading...",
-                ControlBox = false,
-                StartPosition = FormStartPosition.CenterScreen,
-                ShowIcon = false,
-                ShowInTaskbar = false
-            };
-            progressForm.Controls.Add(progressBar);
-            progressForm.FormClosed += (s, args) =>
-            {
-                // Re-enable form controls when the progress form is closed
-                SetFormControlsEnabled(true);
-            };
-            progressForm.Show();
+            // Store the original text of the download button
+            string originalButtonText = btnDownload.Text;
 
             // Start the process
             Process process = new Process { StartInfo = startInfo };
@@ -122,12 +100,25 @@ namespace PanoptoDownloader
             {
                 Application.DoEvents();
                 // You can add a small delay here if needed: Thread.Sleep(100);
+
+                // Update the download button text with alternating periods
+                btnDownload.Text = "Downloading";
+                await Task.Delay(500); // Wait for half a second
+                btnDownload.Text = "Downloading.";
+                await Task.Delay(500); // Wait for half a second
+                btnDownload.Text = "Downloading..";
+                await Task.Delay(500); // Wait for half a second
+                btnDownload.Text = "Downloading...";
+                await Task.Delay(500); // Wait for half a second
             }
 
-            // Close the progress form when the file is present
-            progressForm.Close();
+            // Restore the original text of the download button
+            btnDownload.Text = originalButtonText;
 
             process.WaitForExit();
+
+            // Re-enable form controls
+            SetFormControlsEnabled(true);
         }
 
         private void SetFormControlsEnabled(bool enabled)
