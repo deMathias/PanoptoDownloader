@@ -68,6 +68,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -84,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PanPan.ico" />
+    <None Include="Resources\kisspng-help-circle-o-svg-png-icon-free-download-417664-5c02c1f0acacc5.2162316915436845927073.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

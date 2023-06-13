@@ -76,5 +76,10 @@ namespace PanoptoDownloader
             process.BeginErrorReadLine();
             process.WaitForExit();
         }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/deMathias/PanoptoDownloader");
+        }
     }
 }
