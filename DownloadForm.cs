@@ -89,6 +89,7 @@ namespace PanoptoDownloader
                 if (!string.IsNullOrEmpty(args.Data))
                 {
                     // Do something with the error data
+                    MessageBox.Show("Invalid URL");
                 }
             };
             process.Start();
